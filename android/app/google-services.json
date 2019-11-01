@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "548586776976",
+    "firebase_url": "https://daily-cc098.firebaseio.com",
+    "project_id": "daily-cc098",
+    "storage_bucket": "daily-cc098.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548586776976:android:494ae2b62c95202d63eb15",
+        "android_client_info": {
+          "package_name": "com.example.daily_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548586776976-rdatnpc9bseb4hfh5183opblvsuta5hc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMGmNW20wyaZ7UcytOXxzcs6bTDvMJhLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "548586776976-rdatnpc9bseb4hfh5183opblvsuta5hc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
