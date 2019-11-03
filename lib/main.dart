@@ -1,4 +1,6 @@
+import 'package:daily_app/services/authentication.dart';
 import 'package:daily_app/views/LoginPage.dart';
+import 'package:daily_app/views/RootPage.dart';
 import 'package:flutter/material.dart';
 
 
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.cyan,
         ),
         debugShowCheckedModeBanner: false,
-        home: LoginPage()
+        home: RootPage(auth: Authentication(),)
     );
   }
 }
