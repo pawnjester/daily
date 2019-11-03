@@ -69,7 +69,10 @@ class _RootPageState extends State<RootPage> {
         return buildWaitScreen();
         break;
       case AuthStatus.LOGGED_IN:
-        return DailyList();
+        if (_userId.length > 0 && _userId != null) {
+          return DailyList();
+        } else
+          return buildWaitScreen();
         break;
       case AuthStatus.NOT_LOGGEDIN:
         return LoginPage(
@@ -77,6 +80,8 @@ class _RootPageState extends State<RootPage> {
           loginCallback: loginCallback,
         );
         break;
+      default:
+        return buildWaitScreen();
     }
   }
 }

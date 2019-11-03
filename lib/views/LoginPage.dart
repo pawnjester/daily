@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:daily_app/services/authentication.dart';
 
@@ -22,6 +21,9 @@ class _LoginPageState extends State<LoginPage> {
       String userId = "";
 
       userId = await widget.auth.signUp(_email, _password);
+      if(userId.length > 0 && userId != null) {
+        widget.loginCallback();
+      }
     }
   }
 

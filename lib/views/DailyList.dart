@@ -7,6 +7,10 @@ class DailyList extends StatefulWidget {
 
 class _DailyListState extends State<DailyList> {
   @override
+  void initState() {
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold();
   }
