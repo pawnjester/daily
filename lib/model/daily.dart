@@ -1,13 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class Daily {
   String _id;
   String _title;
   String _description;
   String _date;
-  final DocumentReference reference;
+  bool completed;
 
-  Daily(this._title, this._date, this._description, this.reference);
+  Daily(this._title, this._date, this._description);
 
   String get id => _id;
   String get title => _title;
@@ -41,15 +41,25 @@ class Daily {
     return map;
   }
 
-  Daily.fromMapObject(Map<String, dynamic> map, {this.reference}) {
+   Daily.fromJson(Map<dynamic, dynamic> map) {
     this._id = map['id'];
     this._title = map['title'];
     this._description = map['description'];
     this._date = map['date'];
   }
 
-  Daily.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMapObject(snapshot.data, reference: snapshot.reference);
+  Daily.fromSnapshot(DataSnapshot snapshot)
+      : _id = snapshot.key,
+        _title = snapshot.value['title'],
+        _description = snapshot.value['description'],
+        _date = snapshot.value['date'];
 
+  toJson() {
+    return {
+      "title": _title,
+      "description": _description,
+      "date": _date
+    };
+  }
 
 }
