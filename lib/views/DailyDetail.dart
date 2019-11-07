@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 class DailyDetail extends StatefulWidget {
@@ -22,7 +23,7 @@ class DailyDetailState extends State<DailyDetail> {
   TextEditingController descriptionController = TextEditingController();
 
   DailyDetailState(this.todo, this.appBarTitle);
-  final databaseReference = FirebaseDatabase.instance.reference();
+//  final databaseReference = FirebaseDatabase.instance.reference();
 
   @override
   Widget build(BuildContext context) {
@@ -142,28 +143,31 @@ class DailyDetailState extends State<DailyDetail> {
 
   // Save data to database
   void _save() async {
-    var daily = Daily(todo.title, "", todo.description);
-    if (todo.title.length > 1 && todo.description.length > 1) {
+    final todoReference = Firestore.instance;
+    final uid = new Uuid();
+    String id = uid.v1();
+    if( todo.title.length > 1 && todo.description.length > 1) {
       moveToLastScreen();
-      databaseReference.push().set(daily.toJson());
+      await todoReference.collection('Daily').document()
+          .setData({'id': id,'title': todo.title, 'description': todo.description});
     } else {
-//      // final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
-//      // Scaffold.of(context).showSnackBar(snackbar);
+      // final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
+      // Scaffold.of(context).showSnackBar(snackbar);
     }
   }
 
   void _update() async {
     if (todo.title.length > 1 && todo.description.length > 1) {
       moveToLastScreen();
-//      final todoReference = Firestore.instance;
-//      await todoReference.collection('Todo').document(todo.reference.documentID)
-//          .updateData({'title': todo.title, 'description': todo.description});
+      final todoReference = Firestore.instance;
+      await todoReference.collection('Daily').document(todo.reference.documentID)
+          .updateData({'title': todo.title, 'description': todo.description});
     }
   }
 
   void _delete() async {
     moveToLastScreen();
-//    final todoReference = Firestore.instance;
-//    await todoReference.collection('Todo').document(todo.reference.documentID).delete();
+    final todoReference = Firestore.instance;
+    await todoReference.collection('Daily').document(todo.reference.documentID).delete();
   }
 }
