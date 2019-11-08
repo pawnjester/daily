@@ -18,13 +18,19 @@ class DailyDetail extends StatefulWidget {
 class DailyDetailState extends State<DailyDetail> {
   String appBarTitle;
   Daily todo;
+  bool _isButtonDisabled;
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
   DailyDetailState(this.todo, this.appBarTitle);
-//  final databaseReference = FirebaseDatabase.instance.reference();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _isButtonDisabled = false;
+  }
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
@@ -92,7 +98,7 @@ class DailyDetailState extends State<DailyDetail> {
                           ),
                           onPressed: () {
                             setState(() {
-                              todo.id == null ? _save() : _update();
+                              _isButtonDisabled ? null : (todo.id == null ? _save(context) : _update());
                             });
                           },
                         ),
@@ -142,17 +148,19 @@ class DailyDetailState extends State<DailyDetail> {
   }
 
   // Save data to database
-  void _save() async {
+  void _save(BuildContext context) async {
     final todoReference = Firestore.instance;
     final uid = new Uuid();
     String id = uid.v1();
+    todo.completed = false;
     if( todo.title.length > 1 && todo.description.length > 1) {
       moveToLastScreen();
       await todoReference.collection('Daily').document()
-          .setData({'id': id,'title': todo.title, 'description': todo.description});
+          .setData({'id': id,'title': todo.title,
+        'description': todo.description, 'completed' : todo.completed });
     } else {
-      // final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
-      // Scaffold.of(context).showSnackBar(snackbar);
+       final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
+       Scaffold.of(context).showSnackBar(snackbar);
     }
   }
 
