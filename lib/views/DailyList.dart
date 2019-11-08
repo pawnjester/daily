@@ -14,6 +14,7 @@ class DailyList extends StatefulWidget {
 
 class _DailyListState extends State<DailyList> {
   final logger = Logger();
+  bool _isCompleted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +64,14 @@ class _DailyListState extends State<DailyList> {
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ),
+            trailing: Checkbox(
+              value: _isCompleted,
+              onChanged: (bool value) {
+                setState(() {
+                  _isCompleted = true;
+                });
+              },
+            ),
             title: Text(
               daily.title,
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -94,7 +103,7 @@ class _DailyListState extends State<DailyList> {
   _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('My Todo'),
+          title: Text('Daily'),
         ),
         body: ListView(
           padding: const EdgeInsets.only(top: 20.0),
