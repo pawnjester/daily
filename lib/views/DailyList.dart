@@ -1,13 +1,9 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
 import 'package:daily_app/views/DailyDetail.dart';
 import 'package:daily_app/views/DailyListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:random_color/random_color.dart';
 
 class DailyList extends StatefulWidget {
   @override
@@ -45,14 +41,6 @@ class _DailyListState extends State<DailyList> {
   }
 
   getFirstLetter(String title) => title.substring(0, 1).toUpperCase();
-
-  _deleteSwipe(BuildContext context, Daily todo) async {
-    final todoReference = Firestore.instance;
-    await todoReference
-        .collection('Daily')
-        .document(todo.reference.documentID)
-        .delete();
-  }
 
   _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return Scaffold(
