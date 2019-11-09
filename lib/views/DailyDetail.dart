@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
 import 'package:flutter/cupertino.dart';
@@ -75,7 +77,6 @@ class DailyDetailState extends State<DailyDetail> {
                     controller: descriptionController,
                     style: textStyle,
                     onChanged: (value) {
-                      debugPrint('Something changed in Description Text Field');
                       updateDescription();
                     },
                     decoration: InputDecoration(
@@ -152,7 +153,9 @@ class DailyDetailState extends State<DailyDetail> {
     final todoReference = Firestore.instance;
     final uid = new Uuid();
     String id = uid.v1();
-    todo.completed = false;
+//    todo.completed = false;
+    final logger = Logger();
+    logger.e(todo.completed);
     if( todo.title.length > 1 && todo.description.length > 1) {
       moveToLastScreen();
       await todoReference.collection('Daily').document()
