@@ -54,7 +54,7 @@ class _DailyListState extends State<DailyList> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            navigateToDetail(Daily('', '', '', false, null), 'Add Todo');
+            navigateToDetail(Daily('', '', '', false, null, null), 'Add Todo');
           },
           tooltip: 'Add Todo',
           child: Icon(Icons.add),

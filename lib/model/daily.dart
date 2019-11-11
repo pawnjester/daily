@@ -3,20 +3,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Daily {
   String _id;
   String _title;
+
+
+
   String _description;
   String _date;
   bool _completed;
+  String _priority;
 
 
   final DocumentReference reference;
 
-  Daily(this._title, this._date, this._description, this._completed, this.reference);
+  Daily(this._title, this._date, this._description, this._completed, this._priority, this.reference);
 
   String get id => _id;
   String get title => _title;
   String get description => _description;
   String get date => _date;
   bool get completed => _completed;
+  String get priority => _priority;
+
+  set priority(String value) {
+    _priority = value;
+  }
 
   set title(String newTitle) {
     if (newTitle.length <= 255) {
@@ -43,6 +52,7 @@ class Daily {
     this._description = map['description'];
     this._date = map['date'];
     this._completed = map['completed'];
+    this._priority = map['priority'];
   }
 
   Daily.fromSnapshot(DocumentSnapshot snapshot)
