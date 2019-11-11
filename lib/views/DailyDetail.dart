@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 class DailyDetail extends StatefulWidget {
@@ -153,15 +150,13 @@ class DailyDetailState extends State<DailyDetail> {
     final todoReference = Firestore.instance;
     final uid = new Uuid();
     String id = uid.v1();
-//    todo.completed = false;
-    final logger = Logger();
-    logger.e(todo.completed);
     if( todo.title.length > 1 && todo.description.length > 1) {
       moveToLastScreen();
       await todoReference.collection('Daily').document()
           .setData({'id': id,'title': todo.title,
         'description': todo.description, 'completed' : todo.completed });
     } else {
+      _isButtonDisabled = true;
        final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
        Scaffold.of(context).showSnackBar(snackbar);
     }

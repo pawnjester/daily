@@ -25,7 +25,7 @@ class _DailyListState extends State<DailyList> {
 
   _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('Daily').snapshots(),
+      stream: Firestore.instance.collection('Daily').orderBy("completed").snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
         var result = snapshot.data;
