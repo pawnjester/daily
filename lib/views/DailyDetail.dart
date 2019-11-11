@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 class DailyDetail extends StatefulWidget {
@@ -22,6 +23,27 @@ class DailyDetailState extends State<DailyDetail> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
+  Priority _priority = Priority.NoPriority;
+  String taskVal;
+
+  void handleDailyType(Priority value) {
+    setState(() {
+      _priority = value;
+      switch(_priority.index) {
+        case 0:
+          taskVal = 'LowPriority';
+          break;
+        case 1:
+          taskVal = 'MediumPriority';
+          break;
+        case 2:
+          taskVal = 'HighPriority';
+          break;
+      }
+    });
+  }
+  final logger = Logger();
+
   DailyDetailState(this.todo, this.appBarTitle);
 
   @override
@@ -36,6 +58,8 @@ class DailyDetailState extends State<DailyDetail> {
 
     titleController.text = todo.title;
     descriptionController.text = todo.description;
+    logger.e(taskVal);
+
 
     return WillPopScope(
         onWillPop: () {
@@ -81,6 +105,65 @@ class DailyDetailState extends State<DailyDetail> {
                       labelStyle: textStyle,
                     ),
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8, bottom: 8),
+                      child: Text(
+                        'Select the Task Priority',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),),
+                    )
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Radio(
+                          value: Priority.LowPriority,
+                          onChanged: handleDailyType,
+                          groupValue: _priority,
+                          activeColor: Theme.of(context).primaryColorDark,
+                        ),
+                        Text(
+                          'Low Priority',
+                          style: TextStyle(fontSize: 16),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Radio(
+                          value: Priority.MediumPriority,
+                          onChanged: handleDailyType,
+                          groupValue: _priority,
+                          activeColor: Theme.of(context).primaryColorDark,
+                        ),
+                        Text(
+                          'Medium Priority',
+                          style: TextStyle(fontSize: 16),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Radio(
+                          value: Priority.HighPriority,
+                          onChanged: handleDailyType,
+                          groupValue: _priority,
+                          activeColor: Theme.of(context).primaryColorDark,
+                        ),
+                        Text(
+                          'High Priority',
+                          style: TextStyle(fontSize: 16),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
@@ -154,11 +237,11 @@ class DailyDetailState extends State<DailyDetail> {
       moveToLastScreen();
       await todoReference.collection('Daily').document()
           .setData({'id': id,'title': todo.title,
-        'description': todo.description, 'completed' : todo.completed });
+        'description': todo.description, 'completed' : todo.completed, 'priority': taskVal });
     } else {
       _isButtonDisabled = true;
-       final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
-       Scaffold.of(context).showSnackBar(snackbar);
+      final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
+      Scaffold.of(context).showSnackBar(snackbar);
     }
   }
 
@@ -177,3 +260,11 @@ class DailyDetailState extends State<DailyDetail> {
     await todoReference.collection('Daily').document(todo.reference.documentID).delete();
   }
 }
+
+enum Priority {
+  LowPriority,
+  MediumPriority,
+  HighPriority,
+  NoPriority
+}
+
