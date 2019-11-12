@@ -48,9 +48,22 @@ class DailyDetailState extends State<DailyDetail> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _isButtonDisabled = false;
+    switch(todo.priority) {
+      case 'LowPriority' :
+        _priority = Priority.LowPriority;
+        break;
+      case 'MediumPriority':
+        _priority = Priority.MediumPriority;
+        break;
+      case 'HighPriority':
+        _priority = Priority.HighPriority;
+        break;
+      default:
+        _priority = Priority.NoPriority;
+        break;
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -58,8 +71,6 @@ class DailyDetailState extends State<DailyDetail> {
 
     titleController.text = todo.title;
     descriptionController.text = todo.description;
-    logger.e(taskVal);
-
 
     return WillPopScope(
         onWillPop: () {
@@ -112,7 +123,7 @@ class DailyDetailState extends State<DailyDetail> {
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 8),
                       child: Text(
-                        'Select the Task Priority',
+                        'Select a Task Priority',
                         style: TextStyle(
                           fontSize: 18,
                         ),),
@@ -250,7 +261,7 @@ class DailyDetailState extends State<DailyDetail> {
       moveToLastScreen();
       final todoReference = Firestore.instance;
       await todoReference.collection('Daily').document(todo.reference.documentID)
-          .updateData({'title': todo.title, 'description': todo.description});
+          .updateData({'title': todo.title, 'description': todo.description, 'priority': taskVal});
     }
   }
 
