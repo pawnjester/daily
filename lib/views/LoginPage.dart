@@ -15,14 +15,22 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _email;
   String _password;
+  bool _isLoginForm;
 
   void validateAndSubmit() async {
     if (validateAndSave()) {
       String userId = "";
+      if(_isLoginForm) {
+        userId = await widget.auth.signIn(_email, _password);
+        if (userId.length > 0 && userId != null) {
+          widget.loginCallback();
+        }
+      } else {
+        userId = await widget.auth.signUp(_email, _password);
+        if (userId.length > 0 && userId != null) {
+          widget.loginCallback();
+        }
 
-      userId = await widget.auth.signUp(_email, _password);
-      if(userId.length > 0 && userId != null) {
-        widget.loginCallback();
       }
     }
   }
@@ -35,6 +43,12 @@ class _LoginPageState extends State<LoginPage> {
     }
     return false;
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _isLoginForm = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,64 +57,81 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.all(18),
         child: Container(
           width: double.infinity,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: Text(
-                    "Login",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                TextFormField(
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    labelText: "Email",
-                  ),
-                  validator: (value) =>
-                  value.isEmpty ? 'Email can\'t be empty' : null,
-                  onSaved: (value) => _email = value.trim(),
-                ),
-                TextFormField(
-                  obscureText: true,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                  ),
-                  validator: (value) =>
-                  value.isEmpty ? 'Password can\'t be empty' : null,
-                  onSaved: (value) => _password = value.trim(),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Form(
+                key: _formKey,
+                child: Column(
                   children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        child: RaisedButton(
-                          color: Theme.of(context).primaryColorDark,
-                          textColor: Theme.of(context).primaryColorLight,
-                          child: Text(
-                            "Login",
-                            style: TextStyle(fontSize: 18),
+                    Container(
+                      child: Text(
+                        _isLoginForm == true ? "Login" : "Sign Up",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    TextFormField(
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                      ),
+                      validator: (value) =>
+                          value.isEmpty ? 'Email can\'t be empty' : null,
+                      onSaved: (value) => _email = value.trim(),
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                      ),
+                      validator: (value) =>
+                          value.isEmpty ? 'Password can\'t be empty' : null,
+                      onSaved: (value) => _password = value.trim(),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            child: RaisedButton(
+                              color: Theme.of(context).primaryColorDark,
+                              textColor: Theme.of(context).primaryColorLight,
+                              child: Text(
+                                _isLoginForm == true ? "Login" : "Sign Up",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              onPressed: validateAndSubmit,
+                            ),
                           ),
-                          onPressed: validateAndSubmit,
                         ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _isLoginForm = !_isLoginForm;
+                        });
+                      },
+                      child: Text(
+                        _isLoginForm == true ? "Create an account" : "Have an account? Login",
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Text("Create an account"),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
