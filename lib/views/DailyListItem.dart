@@ -3,17 +3,19 @@ import 'package:daily_app/model/daily.dart';
 import 'package:daily_app/views/DailyDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DailyItemList extends StatefulWidget {
   final Daily daily;
 
-  DailyItemList( Daily daily ) : daily = daily, super(key: ObjectKey(daily));
+  DailyItemList(Daily daily)
+      : daily = daily,
+        super(key: ObjectKey(daily));
 
   @override
   State<StatefulWidget> createState() {
     return DailyItemListState(daily);
   }
-
 }
 
 class DailyItemListState extends State<DailyItemList> {
@@ -46,8 +48,7 @@ class DailyItemListState extends State<DailyItemList> {
               child: Text(
                 getFirstLetter(daily.title),
                 style:
-                TextStyle(fontWeight: FontWeight.bold,
-                    color: Colors.black),
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ),
             trailing: Checkbox(
@@ -61,8 +62,7 @@ class DailyItemListState extends State<DailyItemList> {
             ),
             title: Text(
               daily.title,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(daily.description),
             onTap: () {
@@ -90,7 +90,35 @@ class DailyItemListState extends State<DailyItemList> {
 
   void _updateCheckBox(bool value, Daily daily) async {
     final todoReference = Firestore.instance;
-    await todoReference.collection('Daily').document(daily.reference.documentID)
-        .updateData({'completed': value });
+    await todoReference
+        .collection('Daily')
+        .document(daily.reference.documentID)
+        .updateData({'completed': value});
+  }
+
+  Widget dailyType(String type) {
+    IconData iconValue;
+    Color colorValue;
+    switch (type) {
+      case 'LowPriority':
+        iconValue = FontAwesomeIcons.star;
+        colorValue = Color(0xffffc04d);
+        break;
+      case 'MediumPriority':
+        iconValue = FontAwesomeIcons.star;
+        colorValue = Color(0xffffa500);
+        break;
+      case 'HighPriority':
+        iconValue = FontAwesomeIcons.star;
+        colorValue = Color(0xffffa500);
+        break;
+      default:
+        iconValue = FontAwesomeIcons.star;
+        colorValue = Color(0xffffa500);
+    }
+    return CircleAvatar(
+      backgroundColor: colorValue,
+      child: Icon(iconValue, color: Colors.white, size: 20),
+    );
   }
 }

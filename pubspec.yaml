@@ -16,7 +16,7 @@ dependencies:
   uuid: 2.0.1
   random_color: 1.0.3
   cloud_firestore: 0.8.2+1
-  grouped_buttons: ^1.0.4
+  font_awesome_flutter: ^8.2.0
 
 dev_dependencies:
   flutter_test:

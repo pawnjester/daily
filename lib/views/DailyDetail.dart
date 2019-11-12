@@ -48,7 +48,6 @@ class DailyDetailState extends State<DailyDetail> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _isButtonDisabled = false;
   }
@@ -58,7 +57,7 @@ class DailyDetailState extends State<DailyDetail> {
 
     titleController.text = todo.title;
     descriptionController.text = todo.description;
-    logger.e(taskVal);
+    logger.e(todo.priority);
 
 
     return WillPopScope(
@@ -250,7 +249,7 @@ class DailyDetailState extends State<DailyDetail> {
       moveToLastScreen();
       final todoReference = Firestore.instance;
       await todoReference.collection('Daily').document(todo.reference.documentID)
-          .updateData({'title': todo.title, 'description': todo.description});
+          .updateData({'title': todo.title, 'description': todo.description, 'priority': taskVal});
     }
   }
 
