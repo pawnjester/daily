@@ -1,17 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
+import 'package:daily_app/services/authentication.dart';
 import 'package:daily_app/views/DailyDetail.dart';
 import 'package:daily_app/views/DailyListItem.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class DailyList extends StatefulWidget {
+  final String auth;
+
+  DailyList({this.auth});
+
   @override
   _DailyListState createState() => _DailyListState();
 }
 
 class _DailyListState extends State<DailyList> {
   final logger = Logger();
+  String userId = "";
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +35,9 @@ class _DailyListState extends State<DailyList> {
 
   _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('Daily').orderBy("completed").snapshots(),
+      stream: Firestore.instance.collection('Daily')
+          .where("user", isEqualTo: widget.auth)
+          .orderBy("completed", descending: true).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
         var result = snapshot.data;
@@ -53,7 +66,7 @@ class _DailyListState extends State<DailyList> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            navigateToDetail(Daily('', '', '', false, null, null), 'Add Todo');
+            navigateToDetail(Daily('', '', '', false, null, null, widget.auth), 'Add Todo');
           },
           tooltip: 'Add Daily',
           child: Icon(Icons.add),

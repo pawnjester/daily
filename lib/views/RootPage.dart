@@ -20,6 +20,10 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
 
   String _userId = "";
+
+  String get userId => _userId;
+
+
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
 
   @override
@@ -70,7 +74,9 @@ class _RootPageState extends State<RootPage> {
         break;
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
-          return DailyList();
+          return DailyList(
+            auth : userId
+          );
         } else
           return buildWaitScreen();
         break;
