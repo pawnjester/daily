@@ -49,6 +49,8 @@ class DailyDetailState extends State<DailyDetail> {
   @override
   void initState() {
     super.initState();
+    logger.e(widget.todo.user);
+
     _isButtonDisabled = false;
     switch(todo.priority) {
       case 'LowPriority' :
@@ -126,6 +128,7 @@ class DailyDetailState extends State<DailyDetail> {
                         'Select a Task Priority',
                         style: TextStyle(
                           fontSize: 18,
+                          fontWeight: FontWeight.bold
                         ),),
                     )
                   ],
@@ -248,7 +251,10 @@ class DailyDetailState extends State<DailyDetail> {
       moveToLastScreen();
       await todoReference.collection('Daily').document()
           .setData({'id': id,'title': todo.title,
-        'description': todo.description, 'completed' : todo.completed, 'priority': taskVal });
+        'description': todo.description,
+        'completed' : todo.completed,
+        'priority': taskVal,
+        'user': widget.todo.user });
     } else {
       _isButtonDisabled = true;
       final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
