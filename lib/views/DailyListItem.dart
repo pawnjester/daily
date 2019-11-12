@@ -162,7 +162,6 @@ class DailyItemListState extends State<DailyItemList> {
     return CircleAvatar(
       backgroundColor: colorValue,
       radius: 12,
-      child: Icon(iconValue, color: Colors.white, size: 10),
     );
   }
 }
