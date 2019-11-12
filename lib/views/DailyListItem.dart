@@ -24,52 +24,95 @@ class DailyItemListState extends State<DailyItemList> {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-        key: Key(daily.id),
-        background: Container(
-            alignment: AlignmentDirectional.centerEnd,
-            color: Colors.red,
-            child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Icon(Icons.delete),
-            )),
-        direction: DismissDirection.endToStart,
-        onDismissed: (direction) {
-          _deleteSwipe(context, daily);
-          Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text("${daily.title} dismissed")));
-        },
-        child: Card(
-          color: Colors.white,
-          elevation: 2.0,
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              child: Text(
-                getFirstLetter(daily.title),
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+    return InkWell(
+      onTap: () {
+        navigateToDetail(daily, 'Edit Daily');
+      },
+      child: Dismissible(
+          key: Key(daily.id),
+          background: Container(
+              alignment: AlignmentDirectional.centerEnd,
+              color: Colors.red,
+              child: Padding(
+                padding: EdgeInsets.only(right: 10.0),
+                child: Icon(Icons.delete),
+              )),
+          direction: DismissDirection.endToStart,
+          onDismissed: (direction) {
+            _deleteSwipe(context, daily);
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text("${daily.title} dismissed")));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 80,
+              decoration: BoxDecoration(
+                border: Border.all(width: 2, color: Colors.black38),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircleAvatar(
+                          child: Text(
+                            getFirstLetter(daily.title)
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(daily.title, style: TextStyle(fontSize: 15,
+                              fontWeight: FontWeight.bold),),
+                        ),
+                        Expanded(child: Text(daily.description))
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        dailyType(daily.priority)
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Checkbox(
+                          value: daily.completed,
+                          onChanged: (bool value) {
+                            setState(() {
+                              daily.completed = value;
+                            });
+                            _updateCheckBox(value, daily);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-            trailing: Checkbox(
-              value: daily.completed,
-              onChanged: (bool value) {
-                setState(() {
-                  daily.completed = value;
-                });
-                _updateCheckBox(value, daily);
-              },
-            ),
-            title: Text(
-              daily.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(daily.description),
-            onTap: () {
-              navigateToDetail(daily, 'Edit Daily');
-            },
-          ),
-        ));
+          )
+      ),
+    );
   }
 
   getFirstLetter(String title) => title.substring(0, 1).toUpperCase();
@@ -102,7 +145,7 @@ class DailyItemListState extends State<DailyItemList> {
     switch (type) {
       case 'LowPriority':
         iconValue = FontAwesomeIcons.star;
-        colorValue = Color(0xffffc04d);
+        colorValue = Color(0xffAAFF00);
         break;
       case 'MediumPriority':
         iconValue = FontAwesomeIcons.star;
@@ -110,7 +153,7 @@ class DailyItemListState extends State<DailyItemList> {
         break;
       case 'HighPriority':
         iconValue = FontAwesomeIcons.star;
-        colorValue = Color(0xffffa500);
+        colorValue = Color(0xffFF2929);
         break;
       default:
         iconValue = FontAwesomeIcons.star;
@@ -118,7 +161,8 @@ class DailyItemListState extends State<DailyItemList> {
     }
     return CircleAvatar(
       backgroundColor: colorValue,
-      child: Icon(iconValue, color: Colors.white, size: 20),
+      radius: 12,
+      child: Icon(iconValue, color: Colors.white, size: 10),
     );
   }
 }

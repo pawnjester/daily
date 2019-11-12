@@ -123,7 +123,7 @@ class DailyDetailState extends State<DailyDetail> {
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 8),
                       child: Text(
-                        'Select the Task Priority',
+                        'Select a Task Priority',
                         style: TextStyle(
                           fontSize: 18,
                         ),),
