@@ -50,6 +50,20 @@ class DailyDetailState extends State<DailyDetail> {
   void initState() {
     super.initState();
     _isButtonDisabled = false;
+    switch(todo.priority) {
+      case 'LowPriority' :
+        _priority = Priority.LowPriority;
+        break;
+      case 'MediumPriority':
+        _priority = Priority.MediumPriority;
+        break;
+      case 'HighPriority':
+        _priority = Priority.HighPriority;
+        break;
+      default:
+        _priority = Priority.NoPriority;
+        break;
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -57,8 +71,6 @@ class DailyDetailState extends State<DailyDetail> {
 
     titleController.text = todo.title;
     descriptionController.text = todo.description;
-    logger.e(todo.priority);
-
 
     return WillPopScope(
         onWillPop: () {

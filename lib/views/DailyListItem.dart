@@ -66,7 +66,7 @@ class DailyItemListState extends State<DailyItemList> {
             ),
             subtitle: Text(daily.description),
             onTap: () {
-              navigateToDetail(daily, 'Edit Todo');
+              navigateToDetail(daily, 'Edit Daily');
             },
           ),
         ));

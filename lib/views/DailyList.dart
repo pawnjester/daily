@@ -12,7 +12,6 @@ class DailyList extends StatefulWidget {
 
 class _DailyListState extends State<DailyList> {
   final logger = Logger();
-  bool _isCompleted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +55,7 @@ class _DailyListState extends State<DailyList> {
           onPressed: () {
             navigateToDetail(Daily('', '', '', false, null, null), 'Add Todo');
           },
-          tooltip: 'Add Todo',
+          tooltip: 'Add Daily',
           child: Icon(Icons.add),
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
