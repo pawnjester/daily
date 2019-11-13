@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:daily_app/services/authentication.dart';
+import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 
 class LoginPage extends StatefulWidget {
   final BaseAuth auth;
@@ -16,15 +20,19 @@ class _LoginPageState extends State<LoginPage> {
   String _email;
   String _password;
   bool _isLoginForm;
+  String userId = "";
+  final logger = Logger();
 
   void validateAndSubmit() async {
     if (validateAndSave()) {
-      String userId = "";
       if(_isLoginForm) {
-        userId = await widget.auth.signIn(_email, _password);
-        if (userId.length > 0 && userId != null) {
-          widget.loginCallback();
-        }
+        userId = await widget.auth.signIn(_email, _password).then((user) {
+          if ( userId != null && userId.length > 0) {
+            widget.loginCallback();
+          }
+        }).catchError((error) {
+          logger.e("OOOO>>>>>PPPP");
+        });
       } else {
         userId = await widget.auth.signUp(_email, _password);
         if (userId.length > 0 && userId != null) {
