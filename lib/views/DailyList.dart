@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
-import 'package:daily_app/services/authentication.dart';
 import 'package:daily_app/views/DailyDetail.dart';
 import 'package:daily_app/views/DailyListItem.dart';
 import 'package:flutter/material.dart';
@@ -36,10 +35,13 @@ class _DailyListState extends State<DailyList> {
   _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('Daily')
-          .where("user", isEqualTo: widget.auth)
-          .orderBy("completed", descending: true).snapshots(),
+          .where("user", isEqualTo: widget.auth).snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
+        if (!snapshot.hasData) return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
         var result = snapshot.data;
         return _buildList(context, result.documents);
       },
@@ -52,12 +54,19 @@ class _DailyListState extends State<DailyList> {
     }));
   }
 
+  _logout () {
+
+  }
+
   getFirstLetter(String title) => title.substring(0, 1).toUpperCase();
 
   _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return Scaffold(
         appBar: AppBar(
           title: Text('Daily'),
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.power_settings_new), tooltip: 'Exit', onPressed: _logout,)
+          ],
         ),
         body: ListView(
           padding: const EdgeInsets.only(top: 20.0),
@@ -72,7 +81,8 @@ class _DailyListState extends State<DailyList> {
           child: Icon(Icons.add),
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
-        ));
+        )
+    );
   }
 
   _buildListItem(BuildContext context, DocumentSnapshot data) {

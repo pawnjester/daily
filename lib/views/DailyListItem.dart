@@ -74,10 +74,16 @@ class DailyItemListState extends State<DailyItemList> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Expanded(
-                          child: Text(daily.title, style: TextStyle(fontSize: 15,
-                              fontWeight: FontWeight.bold),),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(daily.title, style: TextStyle(fontSize: 15,
+                                fontWeight: FontWeight.bold),),
+                          ),
                         ),
-                        Expanded(child: Text(daily.description))
+                        Expanded(child: Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(daily.description),
+                        ))
                       ],
                     ),
                   ),
@@ -157,7 +163,7 @@ class DailyItemListState extends State<DailyItemList> {
         break;
       default:
         iconValue = FontAwesomeIcons.star;
-        colorValue = Color(0xffffa500);
+        colorValue = Color(0xfffff500);
     }
     return CircleAvatar(
       backgroundColor: colorValue,
