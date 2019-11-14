@@ -2,6 +2,7 @@ import 'package:daily_app/services/authentication.dart';
 import 'package:daily_app/views/DailyList.dart';
 import 'package:daily_app/views/LoginPage.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 enum AuthStatus {
   LOGGED_IN,
@@ -38,6 +39,8 @@ class _RootPageState extends State<RootPage> {
         AuthStatus.NOT_LOGGEDIN : AuthStatus.LOGGED_IN;
       });
     });
+    final logger = Logger();
+    logger.e(authStatus);
   }
 
   void loginCallback() {
@@ -75,7 +78,8 @@ class _RootPageState extends State<RootPage> {
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
           return DailyList(
-            auth : userId
+            auth : userId,
+            logoutCallback: logoutCallback
           );
         } else
           return buildWaitScreen();

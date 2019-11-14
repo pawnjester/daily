@@ -7,8 +7,10 @@ import 'package:logger/logger.dart';
 
 class DailyList extends StatefulWidget {
   final String auth;
+  final VoidCallback logoutCallback;
 
-  DailyList({this.auth});
+
+  DailyList({this.auth, this.logoutCallback});
 
   @override
   _DailyListState createState() => _DailyListState();
@@ -16,11 +18,11 @@ class DailyList extends StatefulWidget {
 
 class _DailyListState extends State<DailyList> {
   final logger = Logger();
-  String userId = "";
 
   @override
   void initState() {
     super.initState();
+    logger.e(widget.auth);
   }
 
   @override
@@ -55,7 +57,29 @@ class _DailyListState extends State<DailyList> {
   }
 
   _logout () {
-
+    showDialog(context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Sign out"),
+          content: Text("Do you want to Sign out"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("Sign out"),
+              onPressed: () {
+                widget.logoutCallback();
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      }
+    );
   }
 
   getFirstLetter(String title) => title.substring(0, 1).toUpperCase();
