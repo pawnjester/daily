@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
           }
         } catch ( error ) {
           Scaffold.of(_scaffoldContext).showSnackBar(
-              SnackBar(content: Text("error"),
+              SnackBar(content: Text("The email/password is invalid"),
                 duration: Duration(seconds: 5),));
         };
       } else {
