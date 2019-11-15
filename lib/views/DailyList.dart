@@ -36,7 +36,8 @@ class _DailyListState extends State<DailyList> {
   _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('Daily')
-          .where("user", isEqualTo: widget.user).snapshots(),
+          .where("user", isEqualTo: widget.user).orderBy("completed")
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container(
           child: Center(
