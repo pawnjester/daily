@@ -75,7 +75,9 @@ class _RootPageState extends State<RootPage> {
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
           return DailyList(
-            auth : userId
+            user : userId,
+            logoutCallback: logoutCallback,
+            auth: widget.auth
           );
         } else
           return buildWaitScreen();

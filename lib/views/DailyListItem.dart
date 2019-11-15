@@ -3,7 +3,6 @@ import 'package:daily_app/model/daily.dart';
 import 'package:daily_app/views/DailyDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DailyItemList extends StatefulWidget {
   final Daily daily;
@@ -146,23 +145,18 @@ class DailyItemListState extends State<DailyItemList> {
   }
 
   Widget dailyType(String type) {
-    IconData iconValue;
     Color colorValue;
     switch (type) {
       case 'LowPriority':
-        iconValue = FontAwesomeIcons.star;
         colorValue = Color(0xffAAFF00);
         break;
       case 'MediumPriority':
-        iconValue = FontAwesomeIcons.star;
         colorValue = Color(0xffffa500);
         break;
       case 'HighPriority':
-        iconValue = FontAwesomeIcons.star;
         colorValue = Color(0xffFF2929);
         break;
       default:
-        iconValue = FontAwesomeIcons.star;
         colorValue = Color(0xfffff500);
     }
     return CircleAvatar(

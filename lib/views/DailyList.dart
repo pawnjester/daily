@@ -1,22 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
+import 'package:daily_app/services/authentication.dart';
 import 'package:daily_app/views/DailyDetail.dart';
 import 'package:daily_app/views/DailyListItem.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class DailyList extends StatefulWidget {
-  final String auth;
+  final String user;
+  final VoidCallback logoutCallback;
+  final BaseAuth auth;
 
-  DailyList({this.auth});
+
+  DailyList({this.user, this.logoutCallback, this.auth});
 
   @override
   _DailyListState createState() => _DailyListState();
 }
 
 class _DailyListState extends State<DailyList> {
-  final logger = Logger();
-  String userId = "";
 
   @override
   void initState() {
@@ -35,7 +36,7 @@ class _DailyListState extends State<DailyList> {
   _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('Daily')
-          .where("user", isEqualTo: widget.auth).snapshots(),
+          .where("user", isEqualTo: widget.user).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Container(
           child: Center(
@@ -55,7 +56,31 @@ class _DailyListState extends State<DailyList> {
   }
 
   _logout () {
-
+    showDialog(context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Sign out"),
+          content: Text("Do you want to Sign out"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("No"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("Sign out"),
+              onPressed: () {
+                widget.auth.signOut().then((_) {
+                  widget.logoutCallback();
+                  Navigator.of(context).pop();
+                });
+              },
+            )
+          ],
+        );
+      }
+    );
   }
 
   getFirstLetter(String title) => title.substring(0, 1).toUpperCase();
@@ -75,7 +100,7 @@ class _DailyListState extends State<DailyList> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            navigateToDetail(Daily('', '', '', false, null, null, widget.auth), 'Add Todo');
+            navigateToDetail(Daily('', '', '', false, null, null, widget.user), 'Add Todo');
           },
           tooltip: 'Add Daily',
           child: Icon(Icons.add),

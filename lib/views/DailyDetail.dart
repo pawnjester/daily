@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 class DailyDetail extends StatefulWidget {
@@ -42,15 +41,12 @@ class DailyDetailState extends State<DailyDetail> {
       }
     });
   }
-  final logger = Logger();
 
   DailyDetailState(this.todo, this.appBarTitle);
 
   @override
   void initState() {
     super.initState();
-    logger.e(widget.todo.user);
-
     _isButtonDisabled = false;
     switch(todo.priority) {
       case 'LowPriority' :
@@ -193,7 +189,8 @@ class DailyDetailState extends State<DailyDetail> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _isButtonDisabled ? null : (todo.id == null ? _save(context) : _update());
+                              _isButtonDisabled ? null :
+                              (todo.id == null ? _save(context) : _update());
                             });
                           },
                         ),
@@ -247,34 +244,49 @@ class DailyDetailState extends State<DailyDetail> {
     final todoReference = Firestore.instance;
     final uid = new Uuid();
     String id = uid.v1();
-    if( todo.title.length > 1 && todo.description.length > 1) {
-      moveToLastScreen();
-      await todoReference.collection('Daily').document()
-          .setData({'id': id,'title': todo.title,
-        'description': todo.description,
-        'completed' : todo.completed,
-        'priority': taskVal,
-        'user': widget.todo.user });
-    } else {
-      _isButtonDisabled = true;
+    try {
+      if( todo.title.length > 1 && todo.description.length > 1) {
+        moveToLastScreen();
+        await todoReference.collection('Daily').document()
+            .setData({'id': id,'title': todo.title,
+          'description': todo.description,
+          'completed' : todo.completed,
+          'priority': taskVal,
+          'user': widget.todo.user });
+      } else {
+        _isButtonDisabled = true;
+        final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
+        Scaffold.of(context).showSnackBar(snackbar);
+      }
+    } on Exception catch (e) {
       final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
       Scaffold.of(context).showSnackBar(snackbar);
     }
   }
 
   void _update() async {
-    if (todo.title.length > 1 && todo.description.length > 1) {
-      moveToLastScreen();
-      final todoReference = Firestore.instance;
-      await todoReference.collection('Daily').document(todo.reference.documentID)
-          .updateData({'title': todo.title, 'description': todo.description, 'priority': taskVal});
+    try {
+      if (todo.title.length > 1 && todo.description.length > 1) {
+        moveToLastScreen();
+        final todoReference = Firestore.instance;
+        await todoReference.collection('Daily').document(todo.reference.documentID)
+            .updateData({'title': todo.title, 'description': todo.description, 'priority': taskVal});
+      }
+    } on Exception catch (e) {
+      final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
+      Scaffold.of(context).showSnackBar(snackbar);
     }
   }
 
   void _delete() async {
-    moveToLastScreen();
-    final todoReference = Firestore.instance;
-    await todoReference.collection('Daily').document(todo.reference.documentID).delete();
+    try {
+      moveToLastScreen();
+      final todoReference = Firestore.instance;
+      await todoReference.collection('Daily').document(todo.reference.documentID).delete();
+    } on Exception catch (e) {
+      final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
+      Scaffold.of(context).showSnackBar(snackbar);
+    }
   }
 }
 
