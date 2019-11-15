@@ -4,7 +4,6 @@ import 'package:daily_app/services/authentication.dart';
 import 'package:daily_app/views/DailyDetail.dart';
 import 'package:daily_app/views/DailyListItem.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class DailyList extends StatefulWidget {
   final String user;

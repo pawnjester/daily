@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:daily_app/services/authentication.dart';
-import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,32 +14,51 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String _email;
   String _password;
   bool _isLoginForm;
   String userId = "";
-  final logger = Logger();
   BuildContext _scaffoldContext;
 
   void validateAndSubmit() async {
     if (validateAndSave()) {
-      if(_isLoginForm) {
+      _scaffoldKey.currentState.showSnackBar(new SnackBar(
+        duration: new Duration(seconds: 4),
+        content: new Row(
+          children: <Widget>[
+            new CircularProgressIndicator(),
+            new Text(_isLoginForm ? "  Signing-In..." : "  Creating your account...")
+          ],
+        ),
+      ));
+      if (_isLoginForm) {
         try {
           userId = await widget.auth.signIn(_email, _password);
-          if ( userId != null && userId.length > 0) {
+          if (userId != null && userId.length > 0) {
             widget.loginCallback();
           }
-        } catch ( error ) {
-          Scaffold.of(_scaffoldContext).showSnackBar(
-              SnackBar(content: Text("The email/password is invalid"),
-                duration: Duration(seconds: 5),));
-        };
-      } else {
-        userId = await widget.auth.signUp(_email, _password);
-        if (userId.length > 0 && userId != null) {
-          widget.loginCallback();
+        } catch (error) {
+          Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
+            content: Text("The email/password is invalid"),
+            duration: Duration(seconds: 5),
+          ));
         }
-
+        ;
+      } else {
+        try {
+          userId = await widget.auth.signUp(_email, _password);
+          if (userId.length > 0 && userId != null) {
+            widget.loginCallback();
+          }
+        } catch (e) {
+          final logger = Logger();
+          logger.e(e);
+          Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
+            content: Text("The email/password is invalid"),
+            duration: Duration(seconds: 5),
+          ));
+        }
       }
     }
   }
@@ -55,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     return false;
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -62,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
     _isLoginForm = true;
   }
 
-  Widget buildBody () {
+  Widget buildBody() {
     return Padding(
       padding: const EdgeInsets.all(18),
       child: Container(
@@ -86,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                       labelText: "Email",
                     ),
                     validator: (value) =>
-                    value.isEmpty ? 'Email can\'t be empty' : null,
+                        value.isEmpty ? 'Email can\'t be empty' : null,
                     onSaved: (value) => _email = value.trim(),
                   ),
                   TextFormField(
@@ -96,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                       labelText: "Password",
                     ),
                     validator: (value) =>
-                    value.isEmpty ? 'Password can\'t be empty' : null,
+                        value.isEmpty ? 'Password can\'t be empty' : null,
                     onSaved: (value) => _password = value.trim(),
                   ),
                   SizedBox(
@@ -111,7 +128,8 @@ class _LoginPageState extends State<LoginPage> {
                             textColor: Theme.of(context).primaryColorLight,
                             child: Text(
                               _isLoginForm == true ? "Login" : "Sign Up",
-                              style: TextStyle(fontSize: 18, color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
                             ),
                             onPressed: validateAndSubmit,
                           ),
@@ -134,7 +152,9 @@ class _LoginPageState extends State<LoginPage> {
                       });
                     },
                     child: Text(
-                      _isLoginForm == true ? "Create an account" : "Have an account? Login",
+                      _isLoginForm == true
+                          ? "Create an account"
+                          : "Have an account? Login",
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -150,12 +170,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(
-        builder: (BuildContext context) {
-          _scaffoldContext = context;
-          return buildBody();
-  }
-      ),
+      key: _scaffoldKey,
+      body: Builder(builder: (BuildContext context) {
+        _scaffoldContext = context;
+        return buildBody();
+      }),
     );
   }
 }
