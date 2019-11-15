@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:daily_app/services/authentication.dart';
-import 'package:logger/logger.dart';
 
 class LoginPage extends StatefulWidget {
   final BaseAuth auth;
@@ -52,8 +51,6 @@ class _LoginPageState extends State<LoginPage> {
             widget.loginCallback();
           }
         } catch (e) {
-          final logger = Logger();
-          logger.e(e);
           Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
             content: Text("The email/password is invalid"),
             duration: Duration(seconds: 5),
