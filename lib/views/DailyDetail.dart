@@ -190,7 +190,7 @@ class DailyDetailState extends State<DailyDetail> {
                           onPressed: () {
                             setState(() {
                               _isButtonDisabled ? null :
-                              (todo.id == null ? _save(context) : _update());
+                              (todo.id == null ? _save(context) : _update(context));
                             });
                           },
                         ),
@@ -210,7 +210,7 @@ class DailyDetailState extends State<DailyDetail> {
                             ),
                             onPressed: () {
                               setState(() {
-                                _delete();
+                                _delete(context);
                               });
                             },
                           ),
@@ -264,7 +264,7 @@ class DailyDetailState extends State<DailyDetail> {
     }
   }
 
-  void _update() async {
+  void _update(BuildContext context) async {
     try {
       if (todo.title.length > 1 && todo.description.length > 1) {
         moveToLastScreen();
@@ -273,18 +273,18 @@ class DailyDetailState extends State<DailyDetail> {
             .updateData({'title': todo.title, 'description': todo.description, 'priority': taskVal});
       }
     } on Exception catch (e) {
-      final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
+      final snackbar = SnackBar(content: Text('You cannot update an Empty file'));
       Scaffold.of(context).showSnackBar(snackbar);
     }
   }
 
-  void _delete() async {
+  void _delete(BuildContext context) async {
     try {
       moveToLastScreen();
       final todoReference = Firestore.instance;
       await todoReference.collection('Daily').document(todo.reference.documentID).delete();
     } on Exception catch (e) {
-      final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
+      final snackbar = SnackBar(content: Text('You cannot delete an Empty file'));
       Scaffold.of(context).showSnackBar(snackbar);
     }
   }

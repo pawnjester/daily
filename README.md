@@ -11,14 +11,14 @@ This Application written with Dart on Flutter.
 - Firestore Database
 
 ## Functionalities
+- Create an account
+- Sign into the account
+- Logout from the account
 - Create a Daily
 - Delete(Swipe to Delete) a daily
 - Edit a Daily
 - Get all Daily
-
-## Display
-![](todo.gif)
-
+- Complete a daily
 
 ## Contributors
 - Okonji Emmanuel
