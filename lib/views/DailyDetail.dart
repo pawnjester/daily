@@ -21,6 +21,7 @@ class DailyDetailState extends State<DailyDetail> {
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Priority _priority = Priority.NoPriority;
   String taskVal;
@@ -75,6 +76,7 @@ class DailyDetailState extends State<DailyDetail> {
           moveToLastScreen();
         },
         child: Scaffold(
+          key: _scaffoldKey,
           appBar: AppBar(
             title: Text(appBarTitle),
             leading: IconButton(
