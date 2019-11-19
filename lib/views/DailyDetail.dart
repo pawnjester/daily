@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:daily_app/model/daily.dart';
+import 'package:daily_app/services/authentication.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -7,8 +8,9 @@ import 'package:uuid/uuid.dart';
 class DailyDetail extends StatefulWidget {
   final String appBarTitle;
   final Daily todo;
+  final BaseAuth auth;
 
-  DailyDetail(this.todo, this.appBarTitle);
+  DailyDetail(this.todo, this.appBarTitle, this.auth);
   @override
   State<StatefulWidget> createState() =>
       DailyDetailState(this.todo, this.appBarTitle);
@@ -22,6 +24,8 @@ class DailyDetailState extends State<DailyDetail> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  FocusNode _textFocus = new FocusNode();
+
 
   Priority _priority = Priority.NoPriority;
   String taskVal;
@@ -49,6 +53,8 @@ class DailyDetailState extends State<DailyDetail> {
   void initState() {
     super.initState();
     _isButtonDisabled = false;
+    titleController.addListener(updateTitle);
+    descriptionController.addListener(updateDescription);
     switch(todo.priority) {
       case 'LowPriority' :
         _priority = Priority.LowPriority;
@@ -231,32 +237,50 @@ class DailyDetailState extends State<DailyDetail> {
     Navigator.pop(context, true);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    titleController.dispose();
+    descriptionController.dispose();
+  }
+
   // Update the title of todo object
   void updateTitle() {
-    todo.title = titleController.text;
+    if(titleController.text.length > 1)  {
+      setState(() {
+        _isButtonDisabled = false;
+      });
+      todo.title = titleController.text;
+    }
   }
 
   // Update the description of todo object
   void updateDescription() {
-    todo.description = descriptionController.text;
+    if(descriptionController.text.length > 1) {
+      setState(() {
+        _isButtonDisabled = false;
+      });
+      todo.description = descriptionController.text;
+    }
   }
 
   // Save data to database
-  void _save(BuildContext context) async {
+  void _save(BuildContext context)  {
     final todoReference = Firestore.instance;
     final uid = new Uuid();
     String id = uid.v1();
     try {
-      if( todo.title.length > 1 && todo.description.length > 1) {
+      if( titleController.text.length > 1 && descriptionController.text.length > 1) {
         moveToLastScreen();
-        await todoReference.collection('Daily').document()
+        widget.auth.getUser().then((user) {
+         todoReference.collection('Daily').document()
             .setData({'id': id,'title': todo.title,
           'description': todo.description,
           'completed' : todo.completed,
           'priority': taskVal,
           'user': widget.todo.user });
+        });
       } else {
-        _isButtonDisabled = true;
         final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
         Scaffold.of(context).showSnackBar(snackbar);
       }

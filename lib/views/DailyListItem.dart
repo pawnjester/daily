@@ -124,7 +124,7 @@ class DailyItemListState extends State<DailyItemList> {
 
   navigateToDetail(Daily todo, String title) async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return DailyDetail(todo, title);
+      return DailyDetail(todo, title, null);
     }));
   }
 
