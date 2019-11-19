@@ -24,7 +24,6 @@ class DailyDetailState extends State<DailyDetail> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  FocusNode _textFocus = new FocusNode();
 
 
   Priority _priority = Priority.NoPriority;
