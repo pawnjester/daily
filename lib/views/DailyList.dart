@@ -52,7 +52,7 @@ class _DailyListState extends State<DailyList> {
 
   navigateToDetail(Daily todo, String title) async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return DailyDetail(todo, title);
+      return DailyDetail(todo, title, widget.auth);
     }));
   }
 
@@ -101,7 +101,8 @@ class _DailyListState extends State<DailyList> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            navigateToDetail(Daily('', '', '', false, null, null, widget.user), 'Add Todo');
+            navigateToDetail(Daily('', '', '',
+                false, null, null, widget.user), 'Add Todo');
           },
           tooltip: 'Add Daily',
           child: Icon(Icons.add),
