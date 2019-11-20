@@ -27,7 +27,8 @@ class _LoginPageState extends State<LoginPage> {
         content: new Row(
           children: <Widget>[
             new CircularProgressIndicator(),
-            new Text(_isLoginForm ? "  Signing-In..." : "  Creating your account...")
+            new Text(
+                _isLoginForm ? "  Signing-In..." : "  Creating your account...")
           ],
         ),
       ));
@@ -108,8 +109,9 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       labelText: "Password",
                     ),
-                    validator: (value) =>
-                        value.isEmpty || value.length <= 6 ? 'Password can\'t be empty' : null,
+                    validator: (value) => value.isEmpty || value.length <= 6
+                        ? 'Password can\'t be empty'
+                        : null,
                     onSaved: (value) => _password = value.trim(),
                   ),
                   SizedBox(

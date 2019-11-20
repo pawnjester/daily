@@ -10,7 +10,6 @@ class DailyList extends StatefulWidget {
   final VoidCallback logoutCallback;
   final BaseAuth auth;
 
-
   DailyList({this.user, this.logoutCallback, this.auth});
 
   @override
@@ -18,7 +17,6 @@ class DailyList extends StatefulWidget {
 }
 
 class _DailyListState extends State<DailyList> {
-
   @override
   void initState() {
     super.initState();
@@ -32,18 +30,20 @@ class _DailyListState extends State<DailyList> {
     ));
   }
 
-
   _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('Daily')
-          .where("user", isEqualTo: widget.user).orderBy("completed")
+      stream: Firestore.instance
+          .collection('Daily')
+          .where("user", isEqualTo: widget.user)
+          .orderBy("completed")
           .snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return Container(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+        if (!snapshot.hasData)
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         var result = snapshot.data;
         return _buildList(context, result.documents);
       },
@@ -56,32 +56,32 @@ class _DailyListState extends State<DailyList> {
     }));
   }
 
-  _logout () {
-    showDialog(context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Sign out"),
-          content: Text("Do you want to Sign out"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text("Sign out"),
-              onPressed: () {
-                widget.auth.signOut().then((_) {
-                  widget.logoutCallback();
+  _logout() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Sign out"),
+            content: Text("Do you want to Sign out"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("No"),
+                onPressed: () {
                   Navigator.of(context).pop();
-                });
-              },
-            )
-          ],
-        );
-      }
-    );
+                },
+              ),
+              FlatButton(
+                child: Text("Sign out"),
+                onPressed: () {
+                  widget.auth.signOut().then((_) {
+                    widget.logoutCallback();
+                    Navigator.of(context).pop();
+                  });
+                },
+              )
+            ],
+          );
+        });
   }
 
   getFirstLetter(String title) => title.substring(0, 1).toUpperCase();
@@ -91,29 +91,35 @@ class _DailyListState extends State<DailyList> {
         appBar: AppBar(
           title: Text('Daily'),
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.power_settings_new), tooltip: 'Exit', onPressed: _logout,)
+            IconButton(
+              icon: Icon(Icons.power_settings_new),
+              tooltip: 'Exit',
+              onPressed: _logout,
+            )
           ],
         ),
         body: ListView(
           padding: const EdgeInsets.only(top: 20.0),
-          children:
-          snapshot.map<Widget>((data) => _buildListItem(context, data)).toList(),
+          children: snapshot
+              .map<Widget>((data) => _buildListItem(context, data))
+              .toList(),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            navigateToDetail(Daily('', '', '',
-                false, null, null, widget.user), 'Add Todo');
+            navigateToDetail(
+                Daily('', '', '', false, null, null, widget.user), 'Add Todo');
           },
           tooltip: 'Add Daily',
           child: Icon(Icons.add),
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
-        )
-    );
+        ));
   }
 
   _buildListItem(BuildContext context, DocumentSnapshot data) {
     final todo = Daily.fromSnapshot(data);
-    return DailyItemList(todo);
+    return DailyItemList(
+      daily: todo,
+    );
   }
 }
