@@ -25,14 +25,13 @@ class DailyDetailState extends State<DailyDetail> {
   TextEditingController descriptionController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-
   Priority _priority = Priority.NoPriority;
   String taskVal;
 
   void handleDailyType(Priority value) {
     setState(() {
       _priority = value;
-      switch(_priority.index) {
+      switch (_priority.index) {
         case 0:
           taskVal = 'LowPriority';
           break;
@@ -54,8 +53,8 @@ class DailyDetailState extends State<DailyDetail> {
     _isButtonDisabled = false;
     titleController.addListener(updateTitle);
     descriptionController.addListener(updateDescription);
-    switch(todo.priority) {
-      case 'LowPriority' :
+    switch (todo.priority) {
+      case 'LowPriority':
         _priority = Priority.LowPriority;
         break;
       case 'MediumPriority':
@@ -69,6 +68,7 @@ class DailyDetailState extends State<DailyDetail> {
         break;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
@@ -130,9 +130,8 @@ class DailyDetailState extends State<DailyDetail> {
                       child: Text(
                         'Select a Task Priority',
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold
-                        ),),
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     )
                   ],
                 ),
@@ -196,8 +195,11 @@ class DailyDetailState extends State<DailyDetail> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _isButtonDisabled ? null :
-                              (todo.id == null ? _save(context) : _update(context));
+                              _isButtonDisabled
+                                  ? null
+                                  : (todo.id == null
+                                      ? _save(context)
+                                      : _update(context));
                             });
                           },
                         ),
@@ -245,7 +247,7 @@ class DailyDetailState extends State<DailyDetail> {
 
   // Update the title of todo object
   void updateTitle() {
-    if(titleController.text.length > 1)  {
+    if (titleController.text.length > 1) {
       setState(() {
         _isButtonDisabled = false;
       });
@@ -255,7 +257,7 @@ class DailyDetailState extends State<DailyDetail> {
 
   // Update the description of todo object
   void updateDescription() {
-    if(descriptionController.text.length > 1) {
+    if (descriptionController.text.length > 1) {
       setState(() {
         _isButtonDisabled = false;
       });
@@ -264,23 +266,27 @@ class DailyDetailState extends State<DailyDetail> {
   }
 
   // Save data to database
-  void _save(BuildContext context)  {
+  void _save(BuildContext context) {
     final todoReference = Firestore.instance;
     final uid = new Uuid();
     String id = uid.v1();
     try {
-      if( titleController.text.length > 1 && descriptionController.text.length > 1) {
+      if (titleController.text.length > 1 &&
+          descriptionController.text.length > 1) {
         moveToLastScreen();
         widget.auth.getUser().then((user) {
-         todoReference.collection('Daily').document()
-            .setData({'id': id,'title': todo.title,
-          'description': todo.description,
-          'completed' : todo.completed,
-          'priority': taskVal,
-          'user': widget.todo.user });
+          todoReference.collection('Daily').document().setData({
+            'id': id,
+            'title': todo.title,
+            'description': todo.description,
+            'completed': todo.completed,
+            'priority': taskVal,
+            'user': widget.todo.user
+          });
         });
       } else {
-        final snackbar = SnackBar(content: Text('You cannot save an Empty file'));
+        final snackbar =
+            SnackBar(content: Text('You cannot save an Empty file'));
         Scaffold.of(context).showSnackBar(snackbar);
       }
     } on Exception catch (e) {
@@ -294,11 +300,18 @@ class DailyDetailState extends State<DailyDetail> {
       if (todo.title.length > 1 && todo.description.length > 1) {
         moveToLastScreen();
         final todoReference = Firestore.instance;
-        await todoReference.collection('Daily').document(todo.reference.documentID)
-            .updateData({'title': todo.title, 'description': todo.description, 'priority': taskVal});
+        await todoReference
+            .collection('Daily')
+            .document(todo.reference.documentID)
+            .updateData({
+          'title': todo.title,
+          'description': todo.description,
+          'priority': taskVal
+        });
       }
     } on Exception catch (e) {
-      final snackbar = SnackBar(content: Text('You cannot update an Empty file'));
+      final snackbar =
+          SnackBar(content: Text('You cannot update an Empty file'));
       Scaffold.of(context).showSnackBar(snackbar);
     }
   }
@@ -307,18 +320,16 @@ class DailyDetailState extends State<DailyDetail> {
     try {
       moveToLastScreen();
       final todoReference = Firestore.instance;
-      await todoReference.collection('Daily').document(todo.reference.documentID).delete();
+      await todoReference
+          .collection('Daily')
+          .document(todo.reference.documentID)
+          .delete();
     } on Exception catch (e) {
-      final snackbar = SnackBar(content: Text('You cannot delete an Empty file'));
+      final snackbar =
+          SnackBar(content: Text('You cannot delete an Empty file'));
       Scaffold.of(context).showSnackBar(snackbar);
     }
   }
 }
 
-enum Priority {
-  LowPriority,
-  MediumPriority,
-  HighPriority,
-  NoPriority
-}
-
+enum Priority { LowPriority, MediumPriority, HighPriority, NoPriority }

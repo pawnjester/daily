@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class DailyItemList extends StatefulWidget {
   final Daily daily;
 
-  DailyItemList(Daily daily)
+  DailyItemList({Daily daily, String payload})
       : daily = daily,
         super(key: ObjectKey(daily));
 
@@ -59,9 +59,7 @@ class DailyItemListState extends State<DailyItemList> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                          child: Text(
-                            getFirstLetter(daily.title)
-                          ),
+                          child: Text(getFirstLetter(daily.title)),
                         )
                       ],
                     ),
@@ -75,11 +73,15 @@ class DailyItemListState extends State<DailyItemList> {
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(top: 8),
-                            child: Text(daily.title, style: TextStyle(fontSize: 15,
-                                fontWeight: FontWeight.bold),),
+                            child: Text(
+                              daily.title,
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
-                        Expanded(child: Padding(
+                        Expanded(
+                            child: Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(daily.description),
                         ))
@@ -90,9 +92,7 @@ class DailyItemListState extends State<DailyItemList> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        dailyType(daily.priority)
-                      ],
+                      children: <Widget>[dailyType(daily.priority)],
                     ),
                   ),
                   Expanded(
@@ -115,8 +115,7 @@ class DailyItemListState extends State<DailyItemList> {
                 ],
               ),
             ),
-          )
-      ),
+          )),
     );
   }
 
