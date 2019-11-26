@@ -3,6 +3,8 @@ import 'package:daily_app/model/daily.dart';
 import 'package:daily_app/services/authentication.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
 class DailyDetail extends StatefulWidget {
@@ -91,7 +93,7 @@ class DailyDetailState extends State<DailyDetail> {
                 }),
           ),
           body: Padding(
-            padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+            padding: EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
             child: ListView(
               children: <Widget>[
                 Padding(
@@ -120,6 +122,40 @@ class DailyDetailState extends State<DailyDetail> {
                       labelText: 'Description',
                       labelStyle: textStyle,
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, bottom: 30),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          "Set Time",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              DatePicker.showTimePicker(
+                                context,
+                                onChanged: (date) {
+                                  print('change $date');
+                                },
+                                onConfirm: (date) {
+                                  print('confirm $date');
+                                },
+                                locale: LocaleType.en,
+                                currentTime: DateTime.now()
+                              );
+                            },
+                            child: Text(
+                              "Tap To Set Time",
+                              style: TextStyle(color: Colors.grey, fontSize: 18),
+                              textAlign: TextAlign.end,
+                            ),
+                          ))
+                    ],
                   ),
                 ),
                 Row(
