@@ -39,17 +39,17 @@ class _RootPageState extends State<RootPage> {
   }
 
   void initializeNotification() {
-    final initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+//    final initializationSettingsAndroid =
+//        AndroidInitializationSettings('app_icon');
+//
+//    final initializationSettingsIOS = IOSInitializationSettings(
+//        onDidReceiveLocalNotification: (id, title, description, payload) =>
+//            onSelectNotification(payload));
+//    final initializationSettings = InitializationSettings(
+//        initializationSettingsAndroid, initializationSettingsIOS);
 
-    final initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification: (id, title, description, payload) =>
-            onSelectNotification(payload));
-    final initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-
-    localNotifications.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+//    localNotifications.initialize(initializationSettings,
+//        onSelectNotification: onSelectNotification);
   }
 
   Future onSelectNotification(String payload) async => await Navigator.push(

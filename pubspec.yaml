@@ -10,13 +10,14 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
-  firebase_auth: 0.7.0
+  firebase_auth: ^0.14.0+5
   logger: ^0.6.0
   uuid: 2.0.1
   random_color: 1.0.3
-  cloud_firestore: 0.8.2+1
+  cloud_firestore: 0.12.9+5
   font_awesome_flutter: ^8.2.0
   flutter_local_notifications: ^0.8.4+3
+  flutter_datetime_picker: 1.2.8
   path_provider: 1.4.4
 
 dev_dependencies:
